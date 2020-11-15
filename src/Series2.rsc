@@ -17,7 +17,7 @@ syntax Object
   ;
   
 syntax Element
-  = ; // Fill in  
+  = String ":" Value; // Fill in  
   
 syntax Value
   = String
@@ -32,8 +32,8 @@ syntax Null
   = "null";
   
 syntax Boolean
-  = // Fill in
-  | // Fill in
+  = "true"
+  | "false"
   ;  
   
 syntax Array
@@ -44,7 +44,9 @@ lexical String
   = [\"] ![\"]* [\"]; // slightly simplified
   
 lexical Number
-  = ; // Fill in. Hint; think of the pattern for numbers in regular expressions. How do you accept a number in a regex?  
+  = [1-9][0-9]* ("." [0-9]*)?
+  | [0] ("." [0-9]*)? 
+  ; 
 
 layout Whitespace = [\ \t\n]* !>> [\ \t\n];  
   
@@ -66,7 +68,13 @@ start[JSON] example()
 // - use concrete pattern matching
 // - use "<x>" to convert a String x to str
 set[str] propNames(start[JSON] json) {
-
+	set[str] names = {};
+	
+	visit (json) {
+		case (Prop) `<String x>: <Value _>`:
+			name += "<x>"[1..-1];
+	}
+	
 }
 
 // define a recursive transformation mapping JSON to map[str,value] 
